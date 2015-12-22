@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir>
+
+# fail fast
+set -e
+
+# Configure directories
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
+
+echo "-----> Install AWS-CLI"
+PIP=$(which pip)
+$PIP install awscli
+aws --version
+
+echo "-----> Exporting AWS keys"
+for KEY in AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY RAILS_ENV; do
+  [ -f $ENV_DIR/$KEY ] && export "$KEY=$(cat $ENV_DIR/$KEY)"
+done
